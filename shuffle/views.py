@@ -92,4 +92,4 @@ def shuffle(request):
             'Ac_index': Ac_index,
             'shuffX': shuffX
         }
-    )
+    ) #The Hills are alive!!!! :O

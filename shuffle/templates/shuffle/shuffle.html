@@ -1,0 +1,38 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/shuffle/style.css' %}">
+
+<html>
+	<body>
+	<h1>Shuffle Program</h1>
+	<h2>Deck</h2>
+	<p id="myDeck" style="position:relative;"> {{ shuffledDeck }}</p>
+	    
+	<h2>Variables</h2>
+	<table id="variables">
+  		<thead>
+    		<tr>
+      			<th>Name</th>
+      			<th>Value</th>
+    		</tr>
+  	</thead>
+  	<tbody>
+    	<tr>
+			<td>Final cut placement:</td>
+      		<td><span> {{ cut }}</span></td>
+   	 	</tr>        
+		<tr>
+			<td>No. of Shuffles:</td>
+			<td><span> {{ shuffX }}</span></td>
+		</tr>
+		<tr>
+			<td>Ac position:</td>
+			<td><span> {{ Ac_index }}</span></td>
+		</tr>
+		<!-- <tr>
+			<td>Shuffled Deck:</td>
+			<td><span> {{ rawDeck }}</span></td>
+		</tr> -->
+	<tbody>
+	</table>
+    </body>
+</html>

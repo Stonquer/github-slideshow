@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shuffle'
+    'one_card_wager',
+    'shuffle',
 ]
 
 MIDDLEWARE = [

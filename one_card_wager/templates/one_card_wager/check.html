@@ -1,0 +1,25 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/shuffle/style.css' %}">
+
+<html>
+	<body>
+	<h1>One Card Wager</h1>
+	<!-- <form method="post"> 
+		{% csrf_token %}
+		<label>Click to play again!</label>
+		<button type="submit">Deal!</button>
+	</form> -->
+	<h2>Your Card</h2>
+	<p id="myDeck" style="position:relative;"> {{ myCard }}</p>
+	    
+	<h2>Action</h2>
+	<form action="check/">
+		{% csrf_token %}
+		<button type="submit">Check</button>
+	</form>	
+	<form action="bet/">
+		{% csrf_token %}
+		<button type="submit">Bet</button>
+	</form>
+    </body>
+</html>

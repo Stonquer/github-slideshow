@@ -1,17 +1,19 @@
 from django.http import HttpResponse
-from Lib import secrets
 from django.shortcuts import render
+from Lib import secrets
 from django.utils.safestring import mark_safe
 
-def shuffle(request):
-    if request.method == 'GET':
-        method = 'get'        
-    elif request.method == 'POST':
-        method = 'post'
 
-    counter = request.session.get('counter', 0)
-    counter += 1
-    request.session['counter'] = counter
+def one_card_intro(request):
+    return render(
+        request,
+        'one_card_intro/one_card_intro.html',
+        {
+#            'myCard': myCard,
+        }
+    ) 
+
+def one_card_wager(request):
 
     un_shuffled = [
     'Ac', 'As', 'Ah', 'Ad', 'Kc', 'Ks', 'Kh', 'Kd', 'Qc', 'Qs', 'Qh', 'Qd', 
@@ -62,7 +64,7 @@ def shuffle(request):
         opdeck = shuffling
         Ac_report = shuffling.index('Ac')
         Ac_index.append(Ac_report)
-    
+
     foffset = int(len(un_shuffled) * .33)
     fcut = int((secrets.randbelow(17) * .001) + foffset)
     fCut1 = shuffling[0:fcut]
@@ -72,7 +74,6 @@ def shuffle(request):
     Ac_index.append(Ac_report)
 
     card_images = []
-
     for card in shuffled:
         image_dir = '<img src="/static/card_images/shuffle/'
         style = 'style="position: absolute; left: '
@@ -83,20 +84,27 @@ def shuffle(request):
         card_images.append(output)
 
     shuffled = card_images
-    
+
+    myCard = shuffled[0]
+
     myDeck = (' '.join(shuffled))
+
     myDeck = mark_safe(myDeck)
+    myCard = mark_safe(myCard)
 
     return render(
         request,
-        'shuffle/shuffle.html',
+        'one_card_wager/one_card_wager.html',
         {
-            'shuffledDeck': myDeck,
-            'rawDeck': shuffled,
-            'cut': fcut,
-            'Ac_index': Ac_index,
-            'shuffX': shuffX,
-            'method': method,
-            'counter': counter,
+            'myCard': myCard,
         }
     ) 
+
+def check(request):
+    return render(
+        request,
+        'one_card_wager/check.html',
+        {
+            'myCard': myCard,
+        }
+    )

@@ -4,6 +4,11 @@
 <html>
 	<body>
 	<h1>Shuffle Program</h1>
+	<form method="post"> 
+		{% csrf_token %}
+		<label>Click to shuffle again</label>
+		<button type="submit">Shuffle</button>
+	</form>
 	<h2>Deck</h2>
 	<p id="myDeck" style="position:relative;"> {{ shuffledDeck }}</p>
 	    
@@ -27,6 +32,14 @@
 		<tr>
 			<td>Ac position:</td>
 			<td><span> {{ Ac_index }}</span></td>
+		</tr>
+		<tr>
+			<td>method:</td>
+			<td><span> {{ method }}</span></td>
+		</tr>
+		<tr>
+			<td>counter:</td>
+			<td><span> {{ counter }}</span></td>
 		</tr>
 		<!-- <tr>
 			<td>Shuffled Deck:</td>

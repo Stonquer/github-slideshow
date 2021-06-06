@@ -6,5 +6,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("", views.one_card_intro, name="one_card_intro"),
     path("game/", views.one_card_wager, name="one_card_wager"),
-    path("check/", views.one_card_wager, name="check"),
+    path("check/", views.check, name="check"),
+    path("showdown/", views.showdown, name="showdown"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

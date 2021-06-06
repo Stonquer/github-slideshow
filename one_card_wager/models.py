@@ -10,26 +10,37 @@ import uuid
 #         """returns the seat number requested by the player"""
 #         pass
 
-# class Seat(Models.model):
+# class Seat(models.Model):
     
 
-# class Table(Models.model):
+# class Table(models.Model):
+
+class Card(models.Model):
+    value = models.IntegerField()
+    rank = models.CharField(max_length=1)
+    suit = models.CharField(max_length=1)
+    name = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.name
+
+# class Deck(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     suit = 
+#     rank = 
+#     cards = 
 
 
-class Deck(Models.model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-
-# class Stack(Models.model):
+# class Stack(models.Model):
 #     owner = Player.Screen_Name
 #     buyin = models.DecimalField(max_digits=None, decimal_places=2)
     
 
-# class Hand(Models.model):
+# class Hand(models.Model):
 #     cards = 
 
-# class Board(Models.model):
+# class Board(models.Model):
 #     cards = 
 
-# class Button(Models.model):
+# class Button(models.Model):
 #     seat = 

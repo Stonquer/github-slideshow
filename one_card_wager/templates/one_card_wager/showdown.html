@@ -20,26 +20,13 @@
 			<td id="compCard"><span> {{ compCardImage }}</span></td>
 		</tr>
 	</table>
-	{% if compAction %}
 	<p>Computer response: {{ compAction }}</p>
-	<h2>Your Action:</h2>
-	<form action="showdown/" method="POST">
-		{% csrf_token %}
-		<button type="submit">Call</button>
-	</form>	
-	<form action="fold/" method="POST">
-		{% csrf_token %}
-		<button type="submit">Fold</button>
-	</form>
-	{% else %}
-	
-	<p>Computer response: Check</p>
-	<h2>Result: {{ result }}</h2>
+	<p>Result: {{ result }}</p>
+    
 	<form action="/one_card_wager/" method="GET"> 
 		<label>Click to play again!</label>
 		<button type="submit">Play again!</button>
 	</form>
-	{% endif %}
 	<h2>Variables</h2>
 	<table id="variables">
   		<thead>

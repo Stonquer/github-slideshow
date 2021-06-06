@@ -1,18 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static '/shuffle/style.css' %}">
 
 <html>
 	<body>
 	<h1>One Card Wager</h1>
-	<!-- <form method="post"> 
-		{% csrf_token %}
-		<label>Click to play again!</label>
-		<button type="submit">Deal!</button>
-	</form> -->
-	<h2>Your Card</h2>
-	<p id="myDeck" style="position:relative;"> {{ myCard }}</p>
-	    
-	<h2>Action</h2>
+	<table id="cards">
+		<thead>
+		  <tr>
+				<th>Your Card</th>
+				<th>Computer's Card</th>
+		  </tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td id="myCard"> {{ myCardImage }}</td>
+			<td id="compCard"><span> {{ compCardImage }}</span></td>
+		</tr>
+    </body>
+	</table>
+	<h2>Your Action:</h2>
 	<form action="check/" method="POST">
 		{% csrf_token %}
 		<button type="submit">Check</button>
@@ -21,5 +31,39 @@
 		{% csrf_token %}
 		<button type="submit">Bet</button>
 	</form>
+	<h2>Variables</h2>
+	<table id="variables">
+  		<thead>
+    		<tr>
+      			<th>Name</th>
+      			<th>Value</th>
+    		</tr>
+  	</thead>
+  	<tbody>
+		<tr>
+			<td>counter:</td>
+			<td><span> {{ counter }}</span></td>
+		</tr>
+		<tr>
+			<td>My Card Rank:</td>
+			<td><span> {{ myCardValue }}</span></td>
+		</tr>
+		<tr>
+			<td>Computer's Card Rank:</td>
+			<td><span> {{ compCardValue }}</span></td>
+		</tr>
+		<tr>
+			<td>Where Ac has been:</td>
+			<td><span> {{ Ac_index }}</span></td>
+		</tr>
+		<tr>
+			<td>My Card:</td>
+			<td><span> {{ myCard }}</span></td>
+		</tr>
+		<tr>
+			<td>Computer's Card:</td>
+			<td><span> {{ compCard }}</span></td>
+		</tr>
     </body>
 </html>
+{% endblock %}

@@ -4,6 +4,8 @@ from Lib import secrets
 from django.utils.safestring import mark_safe
 #from .models import Card
 
+cardBackImage = mark_safe('<img src="/static/card_images/shuffle/cardback.png" alt="cardBack">')
+
 def one_card_intro(request):
     """A button to shuffle a deck and start playing the game 'One Card Wager'"""
 
@@ -166,7 +168,7 @@ def one_card_wager(request):
         'one_card_wager/one_card_wager.html',
         {
             'myCardImage': myCardImage,
-            'compCardImage': compCardImage,
+            'compCardImage': cardBackImage,
             'counter': counter,
             'myCardValue': myCardValue,
             'compCardValue': compCardValue,
@@ -179,7 +181,7 @@ def one_card_wager(request):
 
 def check(request):
     """one_card_wager/game/check/ : When player checks"""
-
+    
     #get variables from session
     counter = request.session.get('counter')
     request.session['counter'] = counter
@@ -199,10 +201,13 @@ def check(request):
 
     #Computer's strategy when checked to
     k100 = secrets.randbelow(100)
-    if compCardValue == 14:
+    if compCardValue >= 13:
         compAction = 'bet'
-    elif compCardValue >= 10:
+    elif compCardValue >= 9:
         if k100 > 25:
+            compAction = 'bet'
+    elif compCardValue <= 8:
+        if k100 < 10:
             compAction = 'bet'
     else:
         compAction = None
@@ -226,7 +231,7 @@ def check(request):
             'one_card_wager/check.html',
             {
             'myCardImage': myCardImage,
-            'compCardImage': compCardImage,
+            'compCardImage': cardBackImage,
             'counter': counter,
             'myCardValue': myCardValue,
             'compCardValue': compCardValue,
@@ -236,13 +241,11 @@ def check(request):
             'compAction': compAction,
             'k100': k100,
             'result': result,
-            
             }
         )
 
     else:
-        if compCardValue <= 7:
-            compAction = None
+        compAction = None
         if myCardValue > compCardValue:
             result = "You Won the Showdown!"
         if myCardValue < compCardValue:
@@ -388,7 +391,7 @@ def bet(request):
     k100 = secrets.randbelow(100)
     if compCardValue > 12:
         compAction = 'call'
-    elif compCardValue >= 10:
+    elif compCardValue >= 9:
         if k100 > 25:
             compAction = 'call'
     else:

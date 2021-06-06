@@ -25,5 +25,5 @@ urlpatterns = [
     path("one_card_wager/", views.one_card_intro, name="one_card_intro"),
     path("one_card_wager/game/", views.one_card_wager, name="one_card_wager"),
     path("one_card_wager/game/check/", views.check, name="check"),
-    path("one_card_wager/game/checkBet/showdown/", views.showdown, name="showdown"),
+    path("one_card_wager/game/check/showdown/", views.showdown, name="showdown"),
 ]

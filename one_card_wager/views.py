@@ -134,8 +134,8 @@ def one_card_intro(request):
 
 
 def one_card_wager(request):
-    """Shuffle the deck, deal one card to each player, assign a rank to 
-    each card"""
+    """Get session data from 'intro' page. HTML file gives player 
+    two options: check or bet"""
 
     #My Card and Computer Card session init
     myCard = request.session.get('myCard')
@@ -199,10 +199,11 @@ def check(request):
     k100 = secrets.randbelow(100)
     if compCardValue == 14:
         compAction = 'bet'
-    if compCardValue >= 10:
+    elif compCardValue >= 10:
         if k100 > 25:
             compAction = 'bet'
-        else: compAction = None
+    else:
+        compAction = None
 
     if compAction == 'bet':
 
@@ -220,7 +221,7 @@ def check(request):
 
         return render(
             request,
-            'one_card_wager/checkBet.html',
+            'one_card_wager/check.html',
             {
             'myCardImage': myCardImage,
             'compCardImage': compCardImage,

@@ -1,0 +1,40 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/shuffle/style.css' %}">
+<html>
+	<body>
+	<h1>One Card Wager</h1>
+	
+	<p>Result: Computer folded... {{ result }}</p>
+    
+	<form action="/one_card_wager/" method="GET"> 
+		<label>Click to play again!</label>
+		<button type="submit">Play again!</button>
+	</form>
+	<h2>Variables</h2>
+	<table id="variables">
+  		<thead>
+    		<tr>
+      			<th>Name</th>
+      			<th>Value</th>
+    		</tr>
+  	</thead>
+  	<tbody>
+		<tr>
+			<td>counter:</td>
+			<td><span> {{ counter }}</span></td>
+		</tr>
+		<tr>
+			<td>Where Ac has been:</td>
+			<td><span> {{ Ac_index }}</span></td>
+		</tr>
+		<tr>
+			<td>k100:</td>
+			<td><span> {{ k100 }}</span></td>
+		</tr>
+    </body>
+</html>
+{% endblock %}

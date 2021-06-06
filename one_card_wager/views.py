@@ -137,7 +137,7 @@ def one_card_wager(request):
     """Get session data from 'intro' page. HTML file gives player 
     two options: check or bet"""
 
-    #My Card and Computer Card session init
+    #My Card and Computer Card session init + variables
     myCard = request.session.get('myCard')
     myCardValue = request.session.get('myCardValue')
     myCardImage = request.session.get('myCardImage')
@@ -193,9 +193,11 @@ def check(request):
     compAction = request.session.get('compAction')
     result = request.session.get('result')
 
+    #take away quote marks for html insertion
     myCardImage = mark_safe(myCardImage)
     compCardImage = mark_safe(compCardImage)
 
+    #Computer's strategy when checked to
     k100 = secrets.randbelow(100)
     if compCardValue == 14:
         compAction = 'bet'
@@ -217,7 +219,7 @@ def check(request):
         request.session['Ac_index'] = Ac_index
         request.session['compAction'] = compAction
         request.session['k100'] = k100
-#        request.session['result'] = result
+        request.session['result'] = result
 
         return render(
             request,
@@ -233,7 +235,7 @@ def check(request):
             'compCard': compCard,
             'compAction': compAction,
             'k100': k100,
-#            'result': result,
+            'result': result,
             
             }
         )
@@ -335,3 +337,119 @@ def showdown(request):
             'result': result,
         }
     )
+
+def fold(request):
+        #get variables from session
+    counter = request.session.get('counter')
+    request.session['counter'] = counter
+#    myCard = request.session.get('myCard')
+#    myCardImage = request.session.get('myCardImage')
+#    myCardValue = request.session.get('myCardValue')
+#    compCard = request.session.get('compCard')
+#    compCardImage = request.session.get('compCardImage')
+#    compCardValue = request.session.get('compCardValue')
+    Ac_index = request.session.get('Ac_index')
+#    compAction = request.session.get('compAction')
+    k100 = request.session.get('k100')
+    result = "You lose the pot!"
+
+    return render(
+        request,
+        'one_card_wager/fold.html',
+        {
+#            'myCardImage': myCardImage,
+#            'compCardImage': compCardImage,
+            'counter': counter,
+#            'myCardValue': myCardValue,
+#            'compCardValue': compCardValue,
+            'Ac_index': Ac_index,
+#            'myCard': myCard,
+#            'compCard': compCard,
+#            'compAction': compAction,
+            'k100': k100,
+            'result': result,
+        }
+    )
+
+def bet(request):
+        #get variables from session
+    counter = request.session.get('counter')
+    request.session['counter'] = counter
+    myCard = request.session.get('myCard')
+    myCardImage = request.session.get('myCardImage')
+    myCardValue = request.session.get('myCardValue')
+    compCard = request.session.get('compCard')
+    compCardImage = request.session.get('compCardImage')
+    compCardValue = request.session.get('compCardValue')
+    Ac_index = request.session.get('Ac_index')
+    compAction = request.session.get('compAction')
+    k100 = request.session.get('k100')
+
+    k100 = secrets.randbelow(100)
+    if compCardValue > 12:
+        compAction = 'call'
+    elif compCardValue >= 10:
+        if k100 > 25:
+            compAction = 'call'
+    else:
+        compAction = None
+
+    if compAction == 'call':
+        if myCardValue == compCardValue:
+            result = "It's a Tie!"
+        elif myCardValue > compCardValue:
+            result = "You Won the Showdown!"
+        elif myCardValue < compCardValue:
+            result = "You Lost the Showdown!"        
+
+        #store variables to session
+        request.session['myCard'] = myCard
+        request.session['myCardValue'] = myCardValue
+        request.session['myCardImage'] = myCardImage
+        request.session['compCard'] = compCard
+        request.session['compCardValue'] = compCardValue
+        request.session['compCardImage'] = compCardImage
+        request.session['Ac_index'] = Ac_index
+        request.session['compAction'] = compAction
+        request.session['k100'] = k100
+        request.session['result'] = result
+
+        #take away quote marks for html insertion
+        myCardImage = mark_safe(myCardImage)
+        compCardImage = mark_safe(compCardImage)
+
+        return render(
+            request,
+            'one_card_wager/showdown.html',
+        {
+            'myCardImage': myCardImage,
+            'compCardImage': compCardImage,
+            'counter': counter,
+            'myCardValue': myCardValue,
+            'compCardValue': compCardValue,
+            'Ac_index': Ac_index,
+            'myCard': myCard,
+            'compCard': compCard,
+            'compAction': compAction,
+            'k100': k100,
+            'result': result,
+        }
+    )
+
+    else:
+        #get variables from session
+        counter = request.session.get('counter')
+        request.session['counter'] = counter
+        Ac_index = request.session.get('Ac_index')
+        k100 = request.session.get('k100')
+        result = "You Won the Pot!"
+        return render(
+            request,
+            'one_card_wager/compFold.html',
+            {
+            'counter': counter,
+            'Ac_index': Ac_index,
+            'k100': k100,
+            'result': result,
+        }
+    )        

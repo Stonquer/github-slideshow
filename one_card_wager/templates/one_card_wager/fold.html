@@ -7,24 +7,12 @@
 <html>
 	<body>
 	<h1>One Card Wager</h1>
-	<table id="cards">
-		<thead>
-		  <tr>
-				<th>Your Card</th>
-				<th>Computer's Card</th>
-		  </tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td id="myCard"> {{ myCardImage }}</td>
-			<td id="compCard"><span> {{ compCardImage }}</span></td>
-		</tr>
-    </body>
-	</table>
 	
-	<form action="showdown" method="POST">
-		{% csrf_token %}
-		<button type="submit">Play Again</button>
+	<p>Result: You folded... {{ result }}</p>
+    
+	<form action="/one_card_wager/" method="GET"> 
+		<label>Click to play again!</label>
+		<button type="submit">Play again!</button>
 	</form>
 	<h2>Variables</h2>
 	<table id="variables">
@@ -58,6 +46,10 @@
 		<tr>
 			<td>Computer's Card:</td>
 			<td><span> {{ compCard }}</span></td>
+		</tr>
+		<tr>
+			<td>k100:</td>
+			<td><span> {{ k100 }}</span></td>
 		</tr>
     </body>
 </html>

@@ -8,4 +8,6 @@ urlpatterns = [
     path("game/", views.one_card_wager, name="one_card_wager"),
     path("check/", views.check, name="check"),
     path("showdown/", views.showdown, name="showdown"),
+    path("fold/", views.fold, name="fold"),
+    path("bet/", views.bet, name="bet"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -26,4 +26,6 @@ urlpatterns = [
     path("one_card_wager/game/", views.one_card_wager, name="one_card_wager"),
     path("one_card_wager/game/check/", views.check, name="check"),
     path("one_card_wager/game/check/showdown/", views.showdown, name="showdown"),
+    path("one_card_wager/game/check/fold/", views.fold, name="fold"),
+    path("one_card_wager/game/bet/", views.bet, name="bet"),
 ]

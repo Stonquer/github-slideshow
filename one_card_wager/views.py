@@ -5,11 +5,13 @@ from django.utils.safestring import mark_safe
 #from .models import Card
 
 cardBackImage = mark_safe('<img src="/static/card_images/shuffle/cardback.png" alt="cardBack">')
+ante = 1
+betsize = 2
 
 def one_card_intro(request):
     """A button to shuffle a deck and start playing the game 'One Card Wager'"""
 
-    #My Card and Computer Card session init
+    #Cards, stack, and session init
     myCard = request.session.get('myCard')
     myCardValue = request.session.get('myCardValue')
     myCardImage = request.session.get('myCardImage')
@@ -17,6 +19,10 @@ def one_card_intro(request):
     compCardValue = request.session.get('compCardValue')
     compCardImage = request.session.get('compCardImage')
     Ac_index = request.session.get('Ac_index')
+
+    compStack = request.session.get('compStack', 100)
+    playerStack = request.session.get('playerStack', 100)
+
 
     un_shuffled = [
     'Ac', 'As', 'Ah', 'Ad', 'Kc', 'Ks', 'Kh', 'Kd', 'Qc', 'Qs', 'Qh', 'Qd', 
@@ -32,13 +38,13 @@ def one_card_intro(request):
     5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3, 
     2, 2, 2, 2]
 
-    #copy un_shuffled to opdeck
+    #copy the un-shuffled deck to an operational deck
     opdeck = un_shuffled
 
     #initialize counter for shuffX
     i = 0
     
-    #pick a number between 10-20 for shuffX
+    #pick a number between 10-20 for shuffX (number of shuffles)
     shuffX = secrets.randbelow(10) + 10
 
     #debug parameter to track Ace of Clubs
@@ -100,13 +106,14 @@ def one_card_intro(request):
     compCardIndex = un_shuffled.index(compCard)
     compCardValue = rankKey[compCardIndex]
 
-    #assign card images
+    #assign card image to player's card
     image_dir = '<img src="/static/card_images/shuffle/'
     dex = un_shuffled.index(myCard) + 1
     strdex = str(dex)
     output = image_dir + strdex + '.png"' + ' alt="' + myCard + '">'
     myCardImage = output
 
+    #assign card image to computer's card
     image_dir = '<img src="/static/card_images/shuffle/'
     dex = un_shuffled.index(compCard) + 1
     strdex = str(dex)
@@ -122,7 +129,7 @@ def one_card_intro(request):
     myCardImage = mark_safe(myCardImage)
     compCardImage = mark_safe(compCardImage)
 
-    #store My Card, Computer's Card, images, and ranks to session
+    #store My Cards, images, ranks and debug vars to session
     request.session['myCard'] = myCard
     request.session['myCardValue'] = myCardValue
     request.session['myCardImage'] = myCardImage
@@ -130,14 +137,23 @@ def one_card_intro(request):
     request.session['compCardValue'] = compCardValue
     request.session['compCardImage'] = compCardImage
     request.session['Ac_index'] = Ac_index
+    request.session['compStack'] = compStack
+    request.session['playerStack'] = playerStack
 
     return render(
-        request, 'one_card_wager/one_card_intro.html') 
+        request, 
+        'one_card_wager/one_card_intro.html',
+        {
+        'startingStack': playerStack,
+        'ante': ante,
+        }
+    ) 
 
 
 def one_card_wager(request):
-    """Get session data from 'intro' page. HTML file gives player 
-    two options: check or bet"""
+    """Get session data from 'intro' page. HTML file shows 
+    player their cards, and then gives the player two 
+    options: check or bet"""
 
     #My Card and Computer Card session init + variables
     myCard = request.session.get('myCard')
@@ -147,13 +163,22 @@ def one_card_wager(request):
     compCardValue = request.session.get('compCardValue')
     compCardImage = request.session.get('compCardImage')
     Ac_index = request.session.get('Ac_index')
-    counter = request.session.get('counter', 0)
+    counter = request.session.get('counter')
+    playerStack = request.session.get('playerStack')
+    compStack = request.session.get('compStack')
+
+    #both players ante
+    pot = 0
+    compStack -= ante
+    pot += ante
+    playerStack -= ante
+    pot += ante
 
     #take away quote marks for html insertion
     myCardImage = mark_safe(myCardImage)
     compCardImage = mark_safe(compCardImage)
 
-    #store My Card, Computer Card, images, and ranks to session
+    #store My Card, Computer Card, images, ranks, and stacks to session
     request.session['myCard'] = myCard
     request.session['myCardValue'] = myCardValue
     request.session['myCardImage'] = myCardImage
@@ -161,7 +186,9 @@ def one_card_wager(request):
     request.session['compCardValue'] = compCardValue
     request.session['compCardImage'] = compCardImage
     request.session['Ac_index'] = Ac_index
-
+    request.session['pot'] = pot
+    request.session['playerStack'] = playerStack
+    request.session['compStack'] = compStack
 
     return render(
         request,
@@ -169,6 +196,9 @@ def one_card_wager(request):
         {
             'myCardImage': myCardImage,
             'compCardImage': cardBackImage,
+            'playerStack': playerStack,
+            'compStack': compStack,
+            'pot': pot,
             'counter': counter,
             'myCardValue': myCardValue,
             'compCardValue': compCardValue,
@@ -181,7 +211,6 @@ def one_card_wager(request):
 
 def check(request):
     """one_card_wager/game/check/ : When player checks"""
-    
     #get variables from session
     counter = request.session.get('counter')
     request.session['counter'] = counter
@@ -192,8 +221,11 @@ def check(request):
     compCardImage = request.session.get('compCardImage')
     compCardValue = request.session.get('compCardValue')
     Ac_index = request.session.get('Ac_index')
-    compAction = request.session.get('compAction')
+    compAction = 0
     result = request.session.get('result')
+    pot = request.session.get('pot')
+    playerStack = request.session.get('playerStack')
+    compStack = request.session.get('compStack')
 
     #take away quote marks for html insertion
     myCardImage = mark_safe(myCardImage)
@@ -213,7 +245,8 @@ def check(request):
         compAction = None
 
     if compAction == 'bet':
-
+        compStack -= betsize
+        pot += betsize
         #store variables to session
         request.session['myCard'] = myCard
         request.session['myCardValue'] = myCardValue
@@ -225,6 +258,9 @@ def check(request):
         request.session['compAction'] = compAction
         request.session['k100'] = k100
         request.session['result'] = result
+        request.session['compStack'] = compStack
+        request.session['playerStack'] = playerStack
+        request.session['pot'] = pot
 
         return render(
             request,
@@ -241,6 +277,9 @@ def check(request):
             'compAction': compAction,
             'k100': k100,
             'result': result,
+            'playerStack': playerStack,
+            'compStack': compStack,
+            'pot': pot,
             }
         )
 
@@ -248,11 +287,16 @@ def check(request):
         compAction = None
         if myCardValue > compCardValue:
             result = "You Won the Showdown!"
+            playerStack += pot
         if myCardValue < compCardValue:
             result = "You Lost the Showdown!"
+            compStack += pot
         else:
             if myCardValue == compCardValue:
                 result = "It's a Tie!"
+                pot = (pot * .5)
+                playerStack += pot
+                compStack += pot
 
     
     #store variables to session
@@ -266,6 +310,9 @@ def check(request):
     request.session['compAction'] = compAction
     request.session['k100'] = k100
     request.session['result'] = result
+    request.session['playerStack'] = playerStack
+    request.session['compStack'] = compStack
+    request.session['pot'] = pot
 
     return render(
         request,
@@ -282,11 +329,15 @@ def check(request):
             'compAction': compAction,
             'k100': k100,
             'result': result,
+            'playerStack': playerStack,
+            'compStack': compStack,
+            'pot': pot,
         }
     )
 
 def showdown(request):
     """one_card_wager/game/check/ : When player calls"""
+
     #get variables from session
     counter = request.session.get('counter')
     request.session['counter'] = counter
@@ -299,17 +350,28 @@ def showdown(request):
     Ac_index = request.session.get('Ac_index')
     compAction = request.session.get('compAction')
     k100 = request.session.get('k100')
-    
+    playerStack = request.session.get('playerStack')
+    compStack = request.session.get('compStack')
+    pot = request.session.get('pot')
+
+    #player called in order to reach this page
+    playerStack -= betsize
+    pot += betsize    
 
     myCardImage = mark_safe(myCardImage)
     compCardImage = mark_safe(compCardImage)
 
     if myCardValue == compCardValue:
         result = "It's a Tie!"
+        pot = (pot * .5)
+        playerStack += pot
+        compStack += pot
     elif myCardValue > compCardValue:
         result = "You Won the Showdown!"
+        playerStack += pot
     elif myCardValue < compCardValue:
         result = "You Lost the Showdown!"
+        compStack += pot
 
     #store variables to session
     request.session['myCard'] = myCard
@@ -322,6 +384,9 @@ def showdown(request):
     request.session['compAction'] = compAction
     request.session['k100'] = k100
     request.session['result'] = result
+    request.session['playerStack'] = playerStack
+    request.session['compStack'] = compStack
+    request.session['pot'] = pot
 
     return render(
         request,
@@ -338,37 +403,38 @@ def showdown(request):
             'compAction': compAction,
             'k100': k100,
             'result': result,
+            'playerStack': playerStack,
+            'compStack': compStack,
+            'pot': pot,
         }
     )
 
 def fold(request):
+    """player folds to computer's bet"""
+
         #get variables from session
     counter = request.session.get('counter')
-    request.session['counter'] = counter
-#    myCard = request.session.get('myCard')
-#    myCardImage = request.session.get('myCardImage')
-#    myCardValue = request.session.get('myCardValue')
-#    compCard = request.session.get('compCard')
-#    compCardImage = request.session.get('compCardImage')
-#    compCardValue = request.session.get('compCardValue')
+    pot = request.session.get('pot')
+    playerStack = request.session.get('playerStack')
+    compStack = request.session.get('compStack')
     Ac_index = request.session.get('Ac_index')
-#    compAction = request.session.get('compAction')
     k100 = request.session.get('k100')
     result = "You lose the pot!"
+
+    compStack += pot
+
+    request.session['compStack'] = compStack
+    request.session['playerStack'] = playerStack
 
     return render(
         request,
         'one_card_wager/fold.html',
         {
-#            'myCardImage': myCardImage,
-#            'compCardImage': compCardImage,
+            'pot': pot,
             'counter': counter,
-#            'myCardValue': myCardValue,
-#            'compCardValue': compCardValue,
+            'playerStack': playerStack,
+            'compStack': compStack,
             'Ac_index': Ac_index,
-#            'myCard': myCard,
-#            'compCard': compCard,
-#            'compAction': compAction,
             'k100': k100,
             'result': result,
         }
@@ -387,6 +453,12 @@ def bet(request):
     Ac_index = request.session.get('Ac_index')
     compAction = request.session.get('compAction')
     k100 = request.session.get('k100')
+    pot = request.session.get('pot')
+    playerStack = request.session.get('playerStack')
+    compStack = request.session.get('compStack')
+
+    playerStack -= betsize
+    pot += betsize
 
     k100 = secrets.randbelow(100)
     if compCardValue > 12:
@@ -398,12 +470,19 @@ def bet(request):
         compAction = None
 
     if compAction == 'call':
+        compStack -= betsize
+        pot += betsize
         if myCardValue == compCardValue:
             result = "It's a Tie!"
+            pot = (pot * .5)
+            playerStack += pot
+            compStack += pot
         elif myCardValue > compCardValue:
             result = "You Won the Showdown!"
+            playerStack += pot
         elif myCardValue < compCardValue:
-            result = "You Lost the Showdown!"        
+            result = "You Lost the Showdown!" 
+            compStack += pot
 
         #store variables to session
         request.session['myCard'] = myCard
@@ -416,6 +495,8 @@ def bet(request):
         request.session['compAction'] = compAction
         request.session['k100'] = k100
         request.session['result'] = result
+        request.session['playerStack'] = playerStack
+        request.session['compStack'] = compStack
 
         #take away quote marks for html insertion
         myCardImage = mark_safe(myCardImage)
@@ -436,6 +517,9 @@ def bet(request):
             'compAction': compAction,
             'k100': k100,
             'result': result,
+            'pot': pot,
+            'playerStack': playerStack,
+            'compStack': compStack,
         }
     )
 
@@ -446,6 +530,11 @@ def bet(request):
         Ac_index = request.session.get('Ac_index')
         k100 = request.session.get('k100')
         result = "You Won the Pot!"
+        playerStack += pot
+
+        request.session['playerStack'] = playerStack
+        request.session['compStack'] = compStack
+
         return render(
             request,
             'one_card_wager/compFold.html',
@@ -454,5 +543,8 @@ def bet(request):
             'Ac_index': Ac_index,
             'k100': k100,
             'result': result,
+            'pot': pot,
+            'playerStack': playerStack,
+            'compStack': compStack,
         }
     )        

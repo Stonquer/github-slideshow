@@ -26,6 +26,29 @@
 		{% csrf_token %}
 		<button type="submit">Play Again</button>
 	</form>
+	<h2>Stats:</h2>
+	<table id="variables">
+  		<thead>
+    		<tr>
+      			<th></th>
+      			<th></th>
+    		</tr>
+  	</thead>
+  	<tbody>
+		<tr>
+			<td>My Stack:</td>
+			<td><span> {{ playerStack }}</span></td>
+		</tr>
+		<tr>
+			<td>Computer's Stack:</td>
+			<td><span> {{ compStack }}</span></td>
+		</tr>
+		<tr>
+			<td>Pot Size:</td>
+			<td><span> {{ pot }}</span></td>
+		</tr>
+	</tbody>
+	</table>
 	<h2>Variables</h2>
 	<table id="variables">
   		<thead>

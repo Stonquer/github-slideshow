@@ -7,6 +7,10 @@ h1 {
     text-decoration: underline;
 }
 
+div.a {
+    width: 50%;
+}
+
 #myDeck img {
     margin-right: 10px;
     margin-top: 0px;

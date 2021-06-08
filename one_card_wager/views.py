@@ -4,6 +4,7 @@ from Lib import secrets
 from django.utils.safestring import mark_safe
 #from .models import Card
 
+#global constants (or what I'm calling "global constants")
 cardBackImage = mark_safe('<img src="/static/card_images/shuffle/cardback.png" alt="cardBack">')
 ante = 1
 betsize = 2
@@ -52,8 +53,8 @@ def one_card_intro(request):
 
     #The shuffling algorithm
     while i < shuffX:
-        offset = int(len(un_shuffled) * .33)
-        cut = int((secrets.randbelow(17)) + offset) 
+        offset = int(len(un_shuffled) * .15)
+        cut = int((secrets.randbelow(8)) + offset) 
         shuffling = []
         i = i + 1
         deck_half1 = opdeck[0:cut]
@@ -146,6 +147,7 @@ def one_card_intro(request):
         {
         'startingStack': playerStack,
         'ante': ante,
+        'betsize': betsize,
         }
     ) 
 
@@ -213,7 +215,6 @@ def check(request):
     """one_card_wager/game/check/ : When player checks"""
     #get variables from session
     counter = request.session.get('counter')
-    request.session['counter'] = counter
     myCard = request.session.get('myCard')
     myCardImage = request.session.get('myCardImage')
     myCardValue = request.session.get('myCardValue')
@@ -222,7 +223,6 @@ def check(request):
     compCardValue = request.session.get('compCardValue')
     Ac_index = request.session.get('Ac_index')
     compAction = 0
-    result = request.session.get('result')
     pot = request.session.get('pot')
     playerStack = request.session.get('playerStack')
     compStack = request.session.get('compStack')
@@ -257,7 +257,6 @@ def check(request):
         request.session['Ac_index'] = Ac_index
         request.session['compAction'] = compAction
         request.session['k100'] = k100
-        request.session['result'] = result
         request.session['compStack'] = compStack
         request.session['playerStack'] = playerStack
         request.session['pot'] = pot
@@ -276,7 +275,6 @@ def check(request):
             'compCard': compCard,
             'compAction': compAction,
             'k100': k100,
-            'result': result,
             'playerStack': playerStack,
             'compStack': compStack,
             'pot': pot,
@@ -415,6 +413,7 @@ def fold(request):
         #get variables from session
     counter = request.session.get('counter')
     pot = request.session.get('pot')
+    compCard = request.session.get('compCard')
     playerStack = request.session.get('playerStack')
     compStack = request.session.get('compStack')
     Ac_index = request.session.get('Ac_index')
@@ -434,6 +433,7 @@ def fold(request):
             'counter': counter,
             'playerStack': playerStack,
             'compStack': compStack,
+            'compCard': compCard,
             'Ac_index': Ac_index,
             'k100': k100,
             'result': result,
@@ -534,6 +534,7 @@ def bet(request):
 
         request.session['playerStack'] = playerStack
         request.session['compStack'] = compStack
+        request.session['compCard'] = compCard
 
         return render(
             request,
@@ -546,5 +547,6 @@ def bet(request):
             'pot': pot,
             'playerStack': playerStack,
             'compStack': compStack,
+            'compCard': compCard,
         }
     )        

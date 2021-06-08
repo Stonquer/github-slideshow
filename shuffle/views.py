@@ -26,8 +26,8 @@ def shuffle(request):
     Ac_index = []
 
     while i < shuffX:
-        offset = int(len(un_shuffled) * .33)
-        cut = int((secrets.randbelow(17)) + offset) 
+        offset = int(len(un_shuffled) * .15)
+        cut = int((secrets.randbelow(8)) + offset) 
         shuffling = []
         i = i + 1
         deck_half1 = opdeck[0:cut]

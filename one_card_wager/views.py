@@ -210,7 +210,6 @@ def one_card_wager(request):
         }
     )
 
-
 def check(request):
     """one_card_wager/game/check/ : When player checks"""
     #get variables from session

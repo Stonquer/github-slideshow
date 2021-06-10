@@ -151,7 +151,6 @@ def one_card_intro(request):
         }
     ) 
 
-
 def one_card_wager(request):
     """Get session data from 'intro' page. HTML file shows 
     player their cards, and then gives the player two 

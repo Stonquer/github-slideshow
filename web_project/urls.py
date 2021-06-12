@@ -15,13 +15,14 @@ Including another URLconf
 """
 
 #from django.contrib import admin
+from django.contrib import admin
 from django.urls import include, path
 from one_card_wager import views
 
 
 urlpatterns = [
     path("", include("shuffle.urls")),
-#    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path("one_card_wager/", views.one_card_intro, name="one_card_intro"),
     path("one_card_wager/game/", views.one_card_wager, name="one_card_wager"),
     path("one_card_wager/game/check/", views.check, name="check"),

@@ -9,6 +9,27 @@ cardBackImage = mark_safe('<img src="/static/card_images/shuffle/cardback.png" a
 ante = 1
 betsize = 2
 
+def signin(request):
+    """sign-in to the site"""
+    pass
+
+def acctDetails(request):
+    pass
+
+def gameSelect(request):
+    
+        return render(
+        request, 
+        'one_card_wager/gameSelect.html',
+
+        {
+        
+        
+        
+        }
+    ) 
+
+
 def one_card_intro(request):
     """A button to shuffle a deck and start playing the game 'One Card Wager'"""
 

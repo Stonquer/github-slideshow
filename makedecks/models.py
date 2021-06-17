@@ -30,17 +30,17 @@ class Card(models.Model):
     rank = models.CharField(max_length=5)
 
     def list(self):
-    """
-    Create a list of playing cards in our database
-    """
-    suits = [0, 1, 2, 3]
-    ranks = [
-    'ace', 'two', 'three', 'four', 
-    'five', 'six', 'seven', 'eight',
-    'nine', 'ten', 'jack', 'queen', 'king'
-    ]
-    cards = [Card(suit=suit, rank=rank) for ranks for suit in suits]
-    Card.objects.bulk_create(cards)
+        """
+        Create a list of playing cards in our database
+        """
+        suits = [0, 1, 2, 3]
+        ranks = [
+        'ace', 'two', 'three', 'four', 
+        'five', 'six', 'seven', 'eight',
+        'nine', 'ten', 'jack', 'queen', 'king'
+        ]
+        cards = [Card(suit=suit, rank=rank) for rank in ranks for suit in suits]
+        Card.objects.bulk_create(cards)
 
 
 

@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from Lib import secrets
 from django.utils.safestring import mark_safe
-#from .models import Card
+from makedecks.models import Deck
 
 #global constants (or what I'm calling "global constants")
 cardBackImage = mark_safe('<img src="/static/card_images/shuffle/cardback.png" alt="cardBack">')
@@ -23,13 +23,10 @@ def gameSelect(request):
         'one_card_wager/gameSelect.html',
 
         {
-        
-        
-        
+
         }
     ) 
-
-
+1
 def one_card_intro(request):
     """A button to shuffle a deck and start playing the game 'One Card Wager'"""
 
@@ -45,20 +42,25 @@ def one_card_intro(request):
     compStack = request.session.get('compStack', 100)
     playerStack = request.session.get('playerStack', 100)
 
-
-    un_shuffled = [
-    'Ac', 'As', 'Ah', 'Ad', 'Kc', 'Ks', 'Kh', 'Kd', 'Qc', 'Qs', 'Qh', 'Qd', 
-    'Jc', 'Js', 'Jh', 'Jd', 'Tc', 'Ts', 'Th', 'Td', '9c', '9s', '9h', '9d', 
-    '8c', '8s', '8h', '8d', '7c', '7s', '7h', '7d', '6c', '6s', '6h', '6d', 
-    '5c', '5s', '5h', '5d', '4c', '4s', '4h', '4d', '3c', '3s', '3h', '3d', 
-    '2c', '2s', '2h', '2d']
+    un_shuffled = Deck.create(Deck, i=0)
+#    un_shuffled = [
+#    'Ac', 'As', 'Ah', 'Ad', 'Kc', 'Ks', 'Kh', 'Kd', 'Qc', 'Qs', 'Qh', 'Qd', 
+#    'Jc', 'Js', 'Jh', 'Jd', 'Tc', 'Ts', 'Th', 'Td', '9c', '9s', '9h', '9d', 
+#    '8c', '8s', '8h', '8d', '7c', '7s', '7h', '7d', '6c', '6s', '6h', '6d', 
+#    '5c', '5s', '5h', '5d', '4c', '4s', '4h', '4d', '3c', '3s', '3h', '3d', 
+#    '2c', '2s', '2h', '2d']
 
     rankKey = [
-    14, 14, 14, 14, 13, 13, 13, 13, 12, 12, 12, 12, 
-    11, 11, 11, 11, 10, 10, 10, 10, 9, 9, 9, 9, 
-    8, 8, 8, 8, 7, 7, 7, 7, 6, 6, 6, 6, 
-    5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3, 
-    2, 2, 2, 2]
+    14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+    14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+    14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+    14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,]
+
+#    14, 14, 14, 14, 13, 13, 13, 13, 12, 12, 12, 12, 
+#    11, 11, 11, 11, 10, 10, 10, 10, 9, 9, 9, 9, 
+#    8, 8, 8, 8, 7, 7, 7, 7, 6, 6, 6, 6, 
+#    5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3, 
+#    2, 2, 2, 2]
 
     #copy the un-shuffled deck to an operational deck
     opdeck = un_shuffled
@@ -132,14 +134,14 @@ def one_card_intro(request):
     image_dir = '<img src="/static/card_images/shuffle/'
     dex = un_shuffled.index(myCard) + 1
     strdex = str(dex)
-    output = image_dir + strdex + '.png"' + ' alt="' + myCard + '">'
+    output = image_dir + strdex + '.svg"' + ' alt="' + myCard + '">'
     myCardImage = output
 
     #assign card image to computer's card
     image_dir = '<img src="/static/card_images/shuffle/'
     dex = un_shuffled.index(compCard) + 1
     strdex = str(dex)
-    output = image_dir + strdex + '.png"' + ' alt="' + compCard + '">'
+    output = image_dir + strdex + '.svg"' + ' alt="' + compCard + '">'
     compCardImage = output
 
     #session counter

@@ -21,6 +21,8 @@ div.a {
     margin-right: 10px;
     margin-top: 0px;
     margin-bottom: 0px;
+    height: 150px;
+    border: 2px solid #074419
 }
   
 #myDeck span {

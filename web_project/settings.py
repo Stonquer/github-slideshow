@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'one_card_wager',
     'shuffle',
+    'makedecks',
 ]
 
 MIDDLEWARE = [

@@ -17,15 +17,12 @@ Including another URLconf
 #from django.contrib import admin
 from django.contrib import admin
 from django.urls import include, path
-from one_card_wager import views
-
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    path("", include("shuffle.urls")),
+    path('makedecks/', include('makedecks.urls')),
+    path('shuffle/', include("shuffle.urls")),
+    path('one_card_wager/', include('one_card_wager.urls')),
     path('admin/', admin.site.urls),
-    path("one_card_wager/", include("one_card_wager.urls")),
 ]
-
-urlpatterns += [
-    path("makedecks/", include("makedecks.urls")),
-]
+urlpatterns += staticfiles_urlpatterns()
